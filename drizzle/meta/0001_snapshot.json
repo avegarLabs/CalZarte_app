@@ -1,0 +1,455 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "c1cdfb25-9273-4c31-9573-f7cab3de881f",
+  "prevId": "4122abb9-e453-4b53-8eed-3734b38bee88",
+  "tables": {
+    "corte_venta": {
+      "name": "corte_venta",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "fecha_inicio": {
+          "name": "fecha_inicio",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fecha_fin": {
+          "name": "fecha_fin",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "notas": {
+          "name": "notas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'CLOSED'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "corte_fechas_validas": {
+          "name": "corte_fechas_validas",
+          "value": "\"corte_venta\".\"fecha_fin\" >= \"corte_venta\".\"fecha_inicio\""
+        },
+        "corte_status_valido": {
+          "name": "corte_status_valido",
+          "value": "\"corte_venta\".\"status\" IN ('OPEN', 'CLOSED')"
+        }
+      }
+    },
+    "precio": {
+      "name": "precio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "producto_id": {
+          "name": "producto_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "valor_cents": {
+          "name": "valor_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "moneda": {
+          "name": "moneda",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'ACTIVE'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {
+        "precio_activo_unico_por_producto": {
+          "name": "precio_activo_unico_por_producto",
+          "columns": [
+            "producto_id"
+          ],
+          "isUnique": true,
+          "where": "\"precio\".\"status\" = 'ACTIVE'"
+        }
+      },
+      "foreignKeys": {
+        "precio_producto_id_producto_id_fk": {
+          "name": "precio_producto_id_producto_id_fk",
+          "tableFrom": "precio",
+          "tableTo": "producto",
+          "columnsFrom": [
+            "producto_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "precio_valor_positivo": {
+          "name": "precio_valor_positivo",
+          "value": "\"precio\".\"valor_cents\" > 0"
+        },
+        "precio_moneda_valida": {
+          "name": "precio_moneda_valida",
+          "value": "\"precio\".\"moneda\" IN ('CUP', 'USD', 'EUR', 'MLC')"
+        },
+        "precio_status_valido": {
+          "name": "precio_status_valido",
+          "value": "\"precio\".\"status\" IN ('ACTIVE', 'INACTIVE')"
+        }
+      }
+    },
+    "producto": {
+      "name": "producto",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "cantidad": {
+          "name": "cantidad",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "producto_cantidad_no_negativa": {
+          "name": "producto_cantidad_no_negativa",
+          "value": "\"producto\".\"cantidad\" >= 0"
+        }
+      }
+    },
+    "tasa_cambio": {
+      "name": "tasa_cambio",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "moneda": {
+          "name": "moneda",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "valor_cents": {
+          "name": "valor_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'ACTIVE'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {
+        "tasa_activa_unica_por_moneda": {
+          "name": "tasa_activa_unica_por_moneda",
+          "columns": [
+            "moneda"
+          ],
+          "isUnique": true,
+          "where": "\"tasa_cambio\".\"status\" = 'ACTIVE'"
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "tasa_valor_positivo": {
+          "name": "tasa_valor_positivo",
+          "value": "\"tasa_cambio\".\"valor_cents\" > 0"
+        },
+        "tasa_moneda_valida": {
+          "name": "tasa_moneda_valida",
+          "value": "\"tasa_cambio\".\"moneda\" IN ('CUP', 'USD', 'EUR', 'MLC')"
+        },
+        "tasa_status_valido": {
+          "name": "tasa_status_valido",
+          "value": "\"tasa_cambio\".\"status\" IN ('ACTIVE', 'INACTIVE')"
+        }
+      }
+    },
+    "venta": {
+      "name": "venta",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "producto_id": {
+          "name": "producto_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "cantidad": {
+          "name": "cantidad",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "precio_id": {
+          "name": "precio_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tasa_cambio_id": {
+          "name": "tasa_cambio_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "corte_venta_id": {
+          "name": "corte_venta_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'COMPLETED'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "venta_producto_id_producto_id_fk": {
+          "name": "venta_producto_id_producto_id_fk",
+          "tableFrom": "venta",
+          "tableTo": "producto",
+          "columnsFrom": [
+            "producto_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "venta_precio_id_precio_id_fk": {
+          "name": "venta_precio_id_precio_id_fk",
+          "tableFrom": "venta",
+          "tableTo": "precio",
+          "columnsFrom": [
+            "precio_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "venta_tasa_cambio_id_tasa_cambio_id_fk": {
+          "name": "venta_tasa_cambio_id_tasa_cambio_id_fk",
+          "tableFrom": "venta",
+          "tableTo": "tasa_cambio",
+          "columnsFrom": [
+            "tasa_cambio_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "venta_corte_venta_id_corte_venta_id_fk": {
+          "name": "venta_corte_venta_id_corte_venta_id_fk",
+          "tableFrom": "venta",
+          "tableTo": "corte_venta",
+          "columnsFrom": [
+            "corte_venta_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "venta_cantidad_positiva": {
+          "name": "venta_cantidad_positiva",
+          "value": "\"venta\".\"cantidad\" > 0"
+        },
+        "venta_status_valido": {
+          "name": "venta_status_valido",
+          "value": "\"venta\".\"status\" IN ('COMPLETED', 'CANCELLED')"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}
