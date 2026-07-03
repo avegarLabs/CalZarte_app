@@ -6,7 +6,7 @@ FROM base AS deps
 RUN apk add --no-cache python3 make g++
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --include=dev
+RUN npm install --legacy-peer-deps
 
 # ── build ────────────────────────────────────────────────────
 FROM base AS builder
