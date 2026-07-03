@@ -1,11 +1,12 @@
 FROM node:22-alpine AS base
+RUN apk add --no-cache libc6-compat
 
 # ── deps ─────────────────────────────────────────────────────
 FROM base AS deps
 RUN apk add --no-cache python3 make g++
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --include=dev
 
 # ── build ────────────────────────────────────────────────────
 FROM base AS builder
@@ -14,7 +15,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 
 RUN npm run build
 
