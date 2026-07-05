@@ -1,12 +1,13 @@
-FROM node:22-alpine AS base
-RUN apk add --no-cache libc6-compat
+FROM node:22-slim AS base
 
 # ── deps ─────────────────────────────────────────────────────
 FROM base AS deps
-RUN apk add --no-cache python3 make g++
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3 make g++ && \
+    rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install --legacy-peer-deps
+COPY package.json ./
+RUN npm install
 
 # ── build ────────────────────────────────────────────────────
 FROM base AS builder
@@ -28,7 +29,7 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+    adduser --system --uid 1001 --ingroup nodejs nextjs
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
