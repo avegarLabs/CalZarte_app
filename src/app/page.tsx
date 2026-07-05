@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 import { obtenerTasasActivas } from "@/services/tasa-cambio.service";
 import { obtenerDashboardData } from "@/services/dashboard.service";
 import { formatMoney } from "@/lib/money";

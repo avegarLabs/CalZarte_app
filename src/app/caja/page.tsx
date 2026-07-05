@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { listarArqueos, obtenerCajaAbierta } from "@/services/caja.service";
 import { formatMoney } from "@/lib/money";
 import { MONEDA_NACIONAL, MONEDAS, type Moneda } from "@/db/constants";

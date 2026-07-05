@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { obtenerProductos } from "@/services/producto.service";
 import { obtenerPrecioActivo } from "@/services/precio.service";
 import { obtenerTasaActiva } from "@/services/tasa-cambio.service";
